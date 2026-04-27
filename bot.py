@@ -26,20 +26,19 @@ async def convertir(update: Update, context: ContextTypes.DEFAULT_TYPE):
     destino = partes[3]
 
     try:
-        async with httpx.AsyncClient() as client:
+       async with httpx.AsyncClient() as client:
             r = await client.get(
-                "https://api.frankfurter.app/latest",
-                params={"from": origen, "to": destino},
+                "https://v6.exchangerate-api.com/v6/" + os.environ["EXCHANGE_API_KEY"] + "/pair/" + origen + "/" + destino + "/" + str(monto),
                 follow_redirects=True
             )
 
-        if r.status_code == 404:
-            await update.message.reply_text("Moneda no encontrada. Probá con USD, EUR, GBP, JPY, MXN, BRL, COP.")
+        if r.status_code != 200:
+            await update.message.reply_text("Moneda no encontrada.")
             return
 
         data = r.json()
-        tasa = data["rates"][destino]
-        resultado = monto * tasa
+        resultado = data["conversion_result"]
+        tasa = data["conversion_rate"]
         await update.message.reply_text(
             str(monto) + " " + origen + " = " + str(round(resultado, 2)) + " " + destino
         )
