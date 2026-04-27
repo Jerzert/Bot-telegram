@@ -1,16 +1,3 @@
-import asyncio
-
-async def main():
-    await app.initialize()
-    await app.bot.delete_webhook(drop_pending_updates=True)
-    await app.start()
-    await app.updater.start_polling()
-    await app.updater.stop()
-    await app.stop()
-    await app.shutdown()
-
-if __name__ == "__main__":
-    asyncio.run(main())
 import os
 import httpx
 from telegram import Update
@@ -45,18 +32,5 @@ async def convertir(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         async with httpx.AsyncClient() as client:
             r = await client.get(
-                "https://api.frankfurter.app/latest",
-                params={"from": origen, "to": destino}
-            )
-
-        await update.message.reply_text(f"Status: {r.status_code}\nRespuesta: {r.text}")
-
-    except Exception as e:
-        await update.message.reply_text(f"Excepción: {type(e).__name__}: {str(e)}")
-
-async def inicio(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Hola! Soy un bot de conversión de monedas.\n" + AYUDA)
-
-app = ApplicationBuilder().token(TOKEN).build()
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, convertir))
+                "
 
