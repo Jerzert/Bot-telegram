@@ -1,9 +1,12 @@
 import os
 import httpx
 from telegram import Update
-from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
+from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters, ContextTypes
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
+
+async def inicio(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Hola! Enviame algo como: 100 USD a EUR")
 
 async def convertir(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = update.message.text.strip().upper()
@@ -36,5 +39,6 @@ async def convertir(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Excepcion: " + str(e))
 
 app = ApplicationBuilder().token(TOKEN).build()
+app.add_handler(CommandHandler("start", inicio))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, convertir))
 app.run_polling(drop_pending_updates=True)
