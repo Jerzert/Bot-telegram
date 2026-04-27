@@ -23,10 +23,17 @@ async def convertir(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     try:
-        monto = float(partes[0])
-    except ValueError:
-        await update.message.reply_text("El monto debe ser un número. Ejemplo: 100 USD a EUR")
-        return
+        async with httpx.AsyncClient() as client:
+            r = await client.get(
+                f"https://api.frankfurter.app/latest",
+                params={"from": origen, "to": destino}
+            )
+            
+        if r.status_code != 200:
+            await update.message.reply_text(f"API respondió {r.status_code}: {r.text}")
+            return
+
+        data = r.json()
 
     origen = partes[1]
     destino = partes[3]
