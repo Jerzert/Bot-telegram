@@ -32,5 +32,19 @@ async def convertir(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         async with httpx.AsyncClient() as client:
             r = await client.get(
-                "
+                "https://api.frankfurter.app/latest",
+                params={"from": origen, "to": destino}
+            )
 
+        await update.message.reply_text(f"Status: {r.status_code}\nRespuesta: {r.text}")
+
+    except Exception as e:
+        await update.message.reply_text(f"Excepción: {type(e).__name__}: {str(e)}")
+
+async def inicio(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Hola! Soy un bot de conversión.\n" + AYUDA)
+
+app = ApplicationBuilder().token(TOKEN).build()
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, convertir))
+
+app.run_polling(drop_pending_updates=True)
