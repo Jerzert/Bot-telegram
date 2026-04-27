@@ -1,3 +1,16 @@
+import asyncio
+
+async def main():
+    await app.initialize()
+    await app.bot.delete_webhook(drop_pending_updates=True)
+    await app.start()
+    await app.updater.start_polling()
+    await app.updater.stop()
+    await app.stop()
+    await app.shutdown()
+
+if __name__ == "__main__":
+    asyncio.run(main())
 import os
 import httpx
 from telegram import Update
@@ -47,4 +60,3 @@ async def inicio(update: Update, context: ContextTypes.DEFAULT_TYPE):
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, convertir))
 
-app.run_polling()
