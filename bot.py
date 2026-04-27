@@ -50,7 +50,7 @@ async def convertir(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
     except Exception as e:
-        await update.message.reply_text("Error consultando las tasas. Intentá de nuevo.")
+        await update.message.reply_text(f"Error: {str(e)}")
 
 async def inicio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Hola! Soy un bot de conversión de monedas.\n" + AYUDA)
