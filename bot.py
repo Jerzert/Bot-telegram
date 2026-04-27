@@ -27,9 +27,10 @@ async def convertir(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         async with httpx.AsyncClient() as client:
-            r = await client.get(
+           r = await client.get(
                 "https://api.frankfurter.app/latest",
-                params={"from": origen, "to": destino}
+                params={"from": origen, "to": destino},
+                follow_redirects=True
             )
         status = r.status_code
         texto_respuesta = r.text
